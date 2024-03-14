@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.26)
+project(ssl)
+
+set(CMAKE_CXX_STANDARD 17)
+find_package(OpenSSL REQUIRED)
+message(${OPENSSL_CRYPTO_LIBRARY})
+message(${OPENSSL_SSL_LIBRARY})
+include_directories(ssl PRIVATE ${OPENSSL_INCLUDE_DIR})
+add_executable(ssl main.cpp tcp_client.cpp ssl_client.cpp)
+target_link_libraries(ssl ${OPENSSL_LIBRARIES})
