@@ -33,15 +33,21 @@ void sslClient::doHandShake() {
 		std::cout << "SSL_connect failed!" << std::endl;
 		return;
 	}
+	if(SSL_get_verify_result(m_ssl) != X509_V_OK) {
+		fprintf(stderr, "Verification Error: %s\n", X509_verify_cert_error_string(SSL_get_verify_result(m_ssl)));
+		ERR_print_errors_fp(stderr);
+        	SSL_CTX_free(m_sslCtx);
+        	return;
+	}
 	m_cert = SSL_get_peer_certificate(m_ssl);
 	std::cout << "SSL_connect succeed!" << std::endl;
 	showServerCert();
-	char buf[1024] = {0};
-	SSL_write(m_ssl, "hello", 5);
-	int recv = SSL_read(m_ssl, buf, sizeof(buf) - 1);
-	if(recv > 0) {
-		std::cout << buf << std::endl;
-	}
+//	char buf[1024] = {0};
+//	SSL_write(m_ssl, "hello", 5);
+//	int recv = SSL_read(m_ssl, buf, sizeof(buf) - 1);
+//	if(recv > 0) {
+//		std::cout << buf << std::endl;
+//	}
 }
 
 void sslClient::showServerCert() {
